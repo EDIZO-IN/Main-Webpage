@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-white text-edizo-gray-900;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-edizo-black;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl leading-snug;
+  }
+
+  p {
+    @apply text-base leading-relaxed text-edizo-gray-800;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-md font-medium transition-all duration-300 ease-in-out;
+  }
+
+  .btn-primary {
+    @apply btn bg-edizo-red text-white hover:bg-opacity-90;
+  }
+
+  .btn-secondary {
+    @apply btn bg-edizo-silver text-edizo-black hover:bg-opacity-90;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-edizo-red text-edizo-red hover:bg-edizo-red hover:text-white;
+  }
+
+  .container-custom {
+    @apply px-4 mx-auto max-w-7xl sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
+  }
+
+  .input-field {
+    @apply w-full p-3 border border-edizo-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-edizo-red;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-edizo-red to-edizo-black bg-clip-text text-transparent;
+  }
+}
