@@ -2,15 +2,14 @@
   "name": "edizo-fullstack-app",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/EDIZO-IN/Main-Webpage.git", 
+  "homepage": "https://github.com/EDIZO-IN/Main-Webpage.git",
   "scripts": {
-    "client": "npm start --prefix client",
+    "client": "npm start --prefix frontend",
     "server": "npm start --prefix server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    
-    "build": "npm run build --prefix client",
+    "build": "npm run build --prefix frontend",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d client/dist"
+    "deploy": "gh-pages -d frontend/dist"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
