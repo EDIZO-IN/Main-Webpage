@@ -41,6 +41,20 @@ const contactMessageSchema = new mongoose.Schema({
 });
 const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema); // Create the Mongoose model
 
+// --- Mongoose Schema & Model for Internship Applications ---
+const internshipApplicationSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+  education: String,
+  experience: String,
+  message: String, // This is the cover letter
+  position: String, // The internship title
+  createdAt: { type: Date, default: Date.now },
+});
+const InternshipApplication = mongoose.model('InternshipApplication', internshipApplicationSchema);
+
+
 // --- Middleware Setup ---
 
 // CORS configuration is crucial for production.
@@ -71,24 +85,21 @@ app.use(cors({
 app.use(bodyParser.json()); // Parse incoming request bodies in JSON format
 app.use(bodyParser.urlencoded({ extended: true })); // Parse incoming request bodies in URL-encoded format
 
-// --- Dummy user store (not used in this version, but kept for potential future use) ---
-const users = [];
-
 // --- Unified Application Submission Endpoint ---
-// This endpoint currently only acknowledges receipt and does not save to any database.
+// This endpoint now saves the application to MongoDB.
 app.post('/submit-application', async (req, res, next) => {
   const applicationData = req.body; // Get application data from the request body
   console.log('Backend: Received application data:', applicationData); // Log received data
 
   try {
-    // TODO: If you need to save applicationData to MongoDB, add your Mongoose model logic here.
-    // Example: const newApplication = new ApplicationModel(applicationData);
-    // await newApplication.save();
-    // console.log('Application data saved to MongoDB:', newApplication);
+    // Save applicationData to MongoDB
+    const newApplication = new InternshipApplication(applicationData);
+    await newApplication.save();
+    console.log('Application data saved to MongoDB:', newApplication);
 
     res.status(200).json({
       success: true,
-      message: 'Application data received successfully.',
+      message: 'Application data received and saved successfully.',
     });
   } catch (error) {
     console.error('Backend: Error processing application data:', error); // Log any errors
@@ -110,7 +121,7 @@ async function sendEmail(emailDetails) {
 
   let subject = ''; // Email subject
   let htmlContent = ''; // Email HTML body
-  const recipient = emailDetails.recipientEmail || emailDetails.email; // Determine recipient email
+  let recipient = emailDetails.recipientEmail || emailDetails.email; // Determine recipient email
 
   if (!recipient) {
     throw new Error('No recipient email provided for sending email.'); // Throw error if no recipient
@@ -135,8 +146,36 @@ async function sendEmail(emailDetails) {
       `;
       break;
     }
+    case 'internshipApplicationNotification': {
+      // This email goes to the admin with the applicant's details
+      const { name, email, phone, education, experience, message, internshipTitle } = emailDetails;
+      // Set the recipient to the admin's email for this type of email
+      recipient = process.env.INTERNSHIP_RECIPIENT_EMAIL || process.env.EMAIL_USER;
+      subject = `New Internship Application for ${internshipTitle || 'Internship'}`;
+      htmlContent = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h2 style="color: #1a73e8;">New Internship Application Received!</h2>
+          <p>A new application has been submitted for the <strong>${internshipTitle || 'internship'}</strong> position.</p>
+          <div style="background-color: #f0f8ff; padding: 15px; border-radius: 8px; border: 1px solid #cceeff;">
+            <p><strong>Applicant Name:</strong> ${name || 'N/A'}</p>
+            <p><strong>Applicant Email:</strong> ${email || 'N/A'}</p>
+            <p><strong>Applicant Phone:</strong> ${phone || 'N/A'}</p>
+            <p><strong>Education:</strong> ${education || 'N/A'}</p>
+            <p><strong>Experience:</strong></p>
+            <p style="white-space: pre-wrap; margin-left: 20px;">${experience || 'No experience provided.'}</p>
+            <p><strong>Cover Letter/Message:</strong></p>
+            <p style="white-space: pre-wrap; margin-left: 20px;">${message || 'No message provided.'}</p>
+          </div>
+          <p style="margin-top: 20px;">Please review the application and take necessary action.</p>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="font-size: 0.8em; color: #666;">This is an automated notification from your website.</p>
+        </div>
+      `;
+      break;
+    }
     case 'contactForm': {
       const { name, email, phone, subject: contactSubject, message } = emailDetails;
+      // Recipient for contact form is already handled by recipientEmail passed from endpoint
       subject = `New Contact Form Submission: ${contactSubject || 'No Subject'}`;
       htmlContent = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -174,7 +213,7 @@ async function sendEmail(emailDetails) {
   // Mail options for Nodemailer
   const mailOptions = {
     from: process.env.EMAIL_USER, // Sender email (from Render env var)
-    to: recipient, // Recipient email
+    to: recipient, // Recipient email (either applicant's or admin's)
     subject, // Email subject
     html: htmlContent, // Email HTML content
   };
@@ -220,7 +259,7 @@ app.post('/send-contact-email', async (req, res, next) => {
 
     await sendEmail({
       type: 'contactForm',
-      recipientEmail: recipientEmailForContact,
+      recipientEmail: recipientEmailForContact, // Explicitly set recipient for admin notification
       name,
       email,
       phone,

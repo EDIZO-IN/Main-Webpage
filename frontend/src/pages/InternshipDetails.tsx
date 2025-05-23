@@ -3,10 +3,8 @@ import { useParams } from 'react-router-dom';
 import {
   Calendar,
   Users,
-
   Wifi,
   Home,
-  
   Check,
   Send,
   CheckCircle,
@@ -17,7 +15,7 @@ import { motion } from 'framer-motion';
 
 // --- Placeholder image URLs (to resolve compilation errors) ---
 // These are used instead of local image imports.
-const placeholderImage = (text: string) => `https://placehold.co/150x150/E0E0E0/666666?text=${encodeURIComponent(text)}`;
+const placeholderImage = (text) => `https://placehold.co/150x150/E0E0E0/666666?text=${encodeURIComponent(text)}`;
 
 // --- Reusable Components (Simplified for this example) ---
 
@@ -485,10 +483,10 @@ const internshipsData = {
 };
 
 // --- Main InternshipDetails Component ---
-const InternshipDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const InternshipDetails = () => {
+  const { id } = useParams();
   const internshipId = id && id in internshipsData ? id : 'web-development';
-  const internship = internshipsData[internshipId as keyof typeof internshipsData];
+  const internship = internshipsData[internshipId];
 
   const [submissionStatus, setSubmissionStatus] = useState('idle'); // 'idle', 'processing', 'success', 'error'
   const [submissionMessage, setSubmissionMessage] = useState('');
@@ -504,7 +502,7 @@ const InternshipDetails: React.FC = () => {
 
   // Handle input changes for text fields
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -512,26 +510,25 @@ const InternshipDetails: React.FC = () => {
 
   // Define the API base URL.
   // This value is now hardcoded to your backend's Render URL.
-  // IMPORTANT: You MUST replace 'https://YOUR-BACKEND-RENDER-URL.onrender.com'
+  // IMPORTANT: You MUST replace 'https://your-backend-render-url.onrender.com'
   // with the actual public URL of your backend service on Render.
   // Example: 'https://edizo-backend.onrender.com'
   const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // <--- REPLACE THIS WITH YOUR ACTUAL BACKEND URL
 
 
   // Handle form submission (directly sends application and email)
-  const handleFormSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log('Attempting to submit form with data:', formData); // Log data before sending
     setSubmissionStatus('processing');
     setSubmissionMessage('Submitting your application and sending confirmation email...');
 
     try {
-      // Send application data to the backend as JSON
-      // Endpoint uses the directly applied API_BASE_URL
+      // 1. Send application data to the backend for saving
       const applicationResponse = await fetch(`${API_BASE_URL}/submit-application`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Specify content type as JSON
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
@@ -540,42 +537,63 @@ const InternshipDetails: React.FC = () => {
       });
 
       if (!applicationResponse.ok) {
-        const errorText = await applicationResponse.text(); // Get error response body
+        const errorText = await applicationResponse.text();
         throw new Error(`Failed to submit application data to backend: ${applicationResponse.status} - ${errorText}`);
       }
 
       const applicationResult = await applicationResponse.json();
       console.log('Application data submitted:', applicationResult);
 
-      // Send confirmation email
-      // Endpoint uses the directly applied API_BASE_URL
-      const emailResponse = await fetch(`${API_BASE_URL}/send-email`, { // This call will go to your Render backend
+      // 2. Send confirmation email to the applicant
+      const emailToApplicantResponse = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           type: 'applicationConfirmation',
-          name: formData.name, // Explicitly include name
-          email: formData.email, // Explicitly include email
-          phone: formData.phone, // Explicitly include phone
-          education: formData.education, // Explicitly include education
-          experience: formData.experience, // Explicitly include experience
-          message: formData.message, // Explicitly include message
+          name: formData.name,
+          email: formData.email,
           internshipTitle: internship.title,
         }),
       });
 
-      if (!emailResponse.ok) {
-        const errorText = await emailResponse.text(); // Get error response body
-        throw new Error(`Failed to send confirmation email: ${emailResponse.status} - ${errorText}`);
+      if (!emailToApplicantResponse.ok) {
+        const errorText = await emailToApplicantResponse.text();
+        console.warn('Failed to send confirmation email to applicant:', errorText); // Log warning instead of error
+        // Do not throw error here, as application submission might still be successful
+      } else {
+        console.log('Confirmation email sent to applicant.');
       }
 
-      const emailResult = await emailResponse.json();
-      console.log('Email sending result:', emailResult);
+      // 3. Send application details notification email to the admin
+      const emailToAdminResponse = await fetch(`${API_BASE_URL}/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'internshipApplicationNotification', // New type for admin notification
+          // No recipientEmail needed here, as it's set in server.js for this type
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          education: formData.education,
+          experience: formData.experience,
+          message: formData.message, // This is the cover letter
+          internshipTitle: internship.title,
+        }),
+      });
+
+      if (!emailToAdminResponse.ok) {
+        const errorText = await emailToAdminResponse.text();
+        console.warn('Failed to send application notification email to admin:', errorText); // Log warning
+      } else {
+        console.log('Application notification email sent to admin.');
+      }
 
       setSubmissionStatus('success');
-      setSubmissionMessage('Application submitted successfully! A confirmation email has been sent.');
+      setSubmissionMessage('Application submitted successfully! A confirmation email has been sent to you.');
       // Reset form data for a new application
       setFormData({
         name: '',
@@ -585,7 +603,7 @@ const InternshipDetails: React.FC = () => {
         experience: '',
         message: '',
       });
-    } catch (error: any) { // Use 'any' for error type to access message property
+    } catch (error) {
       console.error('Error in sending application or email:', error);
       setSubmissionStatus('error');
       setSubmissionMessage(`Application submission failed: ${error.message}. Please try again.`);
@@ -785,7 +803,7 @@ const InternshipDetails: React.FC = () => {
                             placeholder="Why are you interested in this internship?"
                           />
                         </div>
-                        <Button 
+                        <Button
                           type="submit"
                           variant="primary"
                           fullWidth

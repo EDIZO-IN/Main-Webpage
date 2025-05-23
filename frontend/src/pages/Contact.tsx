@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react'; // Added Loader2 for loading state
+import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-// Assuming these components are available in your project structure
-// import PageHeader from '../components/common/PageHeader';
-// import AnimatedSection from '../components/common/AnimatedSection';
-// import Button from '../components/common/Button';
 
 // Placeholder components for demonstration if not provided
 const PageHeader = ({ title, subtitle, backgroundImage }) => (
@@ -43,6 +39,22 @@ const Button = ({ children, type = 'button', disabled = false, onClick, variant 
   </button>
 );
 
+// Contact info reusable component
+const ContactInfo = ({ icon, title, lines }) => (
+  <div className="flex items-start space-x-4">
+    <div className="bg-red-500 rounded-full p-3 flex items-center justify-center"> {/* Using red-500 for edizo-red */}
+      {icon}
+    </div>
+    <div>
+      <h4 className="font-semibold text-lg text-gray-900 mb-1">{title}</h4>
+      <div className="space-y-1 text-gray-700 text-sm">
+        {lines.map((line, i) => (
+          <div key={i}>{line}</div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -57,7 +69,7 @@ const Contact = () => {
   const [formError, setFormError] = useState(null);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> // Added type for 'e'
+    e
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -68,7 +80,7 @@ const Contact = () => {
   // (e.g., import.meta.env.VITE_API_URL) for flexibility across environments (development, staging, production).
   const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Replace with your actual backend Render URL
 
-  const handleSubmit = async (e: React.FormEvent) => { // Added type for 'e'
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setFormError(null); // Clear previous errors
@@ -101,7 +113,7 @@ const Contact = () => {
         subject: '',
         message: '',
       });
-    } catch (error: any) { // Added type for 'error'
+    } catch (error) {
       console.error('Error submitting form:', error);
       setFormError(error.message || 'Failed to send message. Please try again later.');
     } finally {
@@ -142,9 +154,9 @@ const Contact = () => {
                     icon={<Mail className="text-white" size={20} />}
                     title="Email Us"
                     lines={[
-                      <a href="mailto:info@edizo.com" className="text-gray-700 hover:text-red-500">e.d.i.z.o.pvt.ltd@gmail.com</a>,
+                      <a href="mailto:e.d.i.z.o.pvt.ltd@gmail.com" className="text-gray-700 hover:text-red-500">e.d.i.z.o.pvt.ltd@gmail.com</a>,
                       <span className="text-sm text-gray-600">For general inquiries</span>,
-                      <a href="mailto:support@edizo.com" className="text-gray-700 hover:text-red-500 mt-2 block">edizocorp@gmail.com</a>,
+                      <a href="mailto:edizocorp@gmail.com" className="text-gray-700 hover:text-red-500 mt-2 block">edizocorp@gmail.com</a>,
                       <span className="text-sm text-gray-600">For technical support</span>,
                     ]}
                   />
@@ -152,7 +164,7 @@ const Contact = () => {
                     icon={<Phone className="text-white" size={20} />}
                     title="Call Us"
                     lines={[
-                      <a href="tel:+11234567890" className="text-gray-700 hover:text-red-500">+917339316924</a>,
+                      <a href="tel:+917339316924" className="text-gray-700 hover:text-red-500">+917339316924</a>,
                       <span className="text-sm text-gray-600">Mon-Fri: 9:00 AM - 6:00 PM EST</span>
                     ]}
                   />
@@ -161,20 +173,23 @@ const Contact = () => {
                 <div className="mt-8">
                   <h4 className="font-semibold text-lg mb-3 text-gray-900">Connect With Us</h4>
                   <div className="flex space-x-4">
-                    {/* Placeholder for social media icons - ensure Font Awesome is linked if used */}
-                    {['Facebook', 'Twitter', 'LinkedIn', 'Instagram'].map((platform, i) => (
+                    {/* Social media icons with actual URLs */}
+                    {[
+                      { platform: 'Facebook', url: 'https://www.facebook.com/your-facebook-id' },
+                      { platform: 'Twitter', url: 'https://twitter.com/your-twitter-id' },
+                      { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/your-linkedin-id' },
+                      { platform: 'Instagram', url: 'https://www.instagram.com/your-instagram-id' }
+                    ].map((social, i) => (
                       <a
                         key={i}
-                        href="#"
-                        aria-label={platform}
+                        href={social.url}
+                        aria-label={social.platform}
+                        target="_blank" // Opens link in a new tab
+                        rel="noopener noreferrer" // Recommended for security when using target="_blank"
                         className="bg-gray-200 hover:bg-red-500 hover:text-white transition-colors duration-300 w-10 h-10 rounded-full flex items-center justify-center"
                       >
-                        {/* Replace with actual icons or SVGs if Font Awesome is not available */}
-                        <i className={`fa-brands fa-${platform.toLowerCase()}`} />
-                        {/* Example using Lucide-React if you prefer:
-                        {platform === 'Facebook' && <Facebook className="w-5 h-5" />}
-                        {platform === 'Twitter' && <Twitter className="w-5 h-5" />}
-                        */}
+                        {/* Using Font Awesome classes. Ensure Font Awesome is linked in the HTML */}
+                        <i className={`fa-brands fa-${social.platform.toLowerCase()}`} />
                       </a>
                     ))}
                   </div>
@@ -217,7 +232,7 @@ const Contact = () => {
                             type={field === 'email' ? 'email' : 'text'}
                             id={field}
                             name={field}
-                            value={formData[field as keyof typeof formData]} // Type assertion for formData access
+                            value={formData[field]}
                             onChange={handleInputChange}
                             required
                             className="input-field border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -288,21 +303,17 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+// Main App component to render the Contact page
+const App = () => {
+  return (
+    <>
+      {/* Link to Font Awesome for social media icons */}
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+      <main className="min-h-screen bg-gray-50 font-sans antialiased">
+        <Contact />
+      </main>
+    </>
+  );
+};
 
-// Contact info reusable component
-const ContactInfo = ({ icon, title, lines }) => (
-  <div className="flex items-start space-x-4">
-    <div className="bg-red-500 rounded-full p-3 flex items-center justify-center"> {/* Using red-500 for edizo-red */}
-      {icon}
-    </div>
-    <div>
-      <h4 className="font-semibold text-lg text-gray-900 mb-1">{title}</h4>
-      <div className="space-y-1 text-gray-700 text-sm">
-        {lines.map((line, i) => (
-          <div key={i}>{line}</div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
+export default App;
