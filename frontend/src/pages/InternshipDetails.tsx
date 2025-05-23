@@ -143,7 +143,7 @@ const internshipsData = {
     responsibilities: [
       'Build scalable backend systems using Node.js, Django, or Spring Boot',
       'Work with databases and APIs',
-      'Debug and fix backend issues',
+      'Debug and and fix backend issues',
       'Write clean, maintainable, and secure code',
       'Collaborate with frontend developers to integrate APIs',
       'Follow best practices for security and performance',
@@ -514,7 +514,7 @@ const InternshipDetails: React.FC = () => {
   // In development, it might be '/api' (for proxy in vite.config.js).
   // In production (on Render), import.meta.env.VITE_API_URL will be the full URL of your Render backend.
   // This variable is set in Render's environment variables for the frontend service.
-  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'; // <-- This line correctly handles the Render backend connection
 
 
   // Handle form submission (directly sends application and email)

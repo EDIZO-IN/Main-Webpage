@@ -251,5 +251,5 @@ app.use((err, req, res, next) => {
 // --- Start the server ---
 // The server will listen on the port provided by Render (process.env.PORT)
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT} (or Render's assigned port)`);
+  console.log(`Server is running on port ${PORT} (Render's assigned port)`);
 });
