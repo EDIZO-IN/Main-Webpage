@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, Loader2 } from 'lucide-react'; // Added Loader2 for loading state
 import { motion } from 'framer-motion';
 // Assuming these components are available in your project structure
 // import PageHeader from '../components/common/PageHeader';
@@ -57,20 +57,25 @@ const Contact = () => {
   const [formError, setFormError] = useState(null);
 
   const handleInputChange = (
-    e
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> // Added type for 'e'
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  // Directly applying the backend Render URL
+  // IMPORTANT: In a real-world scenario, it's highly recommended to use environment variables
+  // (e.g., import.meta.env.VITE_API_URL) for flexibility across environments (development, staging, production).
+  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Replace with your actual backend Render URL
+
+  const handleSubmit = async (e: React.FormEvent) => { // Added type for 'e'
     e.preventDefault();
     setLoading(true);
     setFormError(null); // Clear previous errors
 
     try {
-      // Updated endpoint to match the backend server's /send-contact-email
-      const response = await fetch('/send-contact-email', {
+      // Updated endpoint to use the directly applied API_BASE_URL
+      const response = await fetch(`${API_BASE_URL}/send-contact-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +101,7 @@ const Contact = () => {
         subject: '',
         message: '',
       });
-    } catch (error) {
+    } catch (error: any) { // Added type for 'error'
       console.error('Error submitting form:', error);
       setFormError(error.message || 'Failed to send message. Please try again later.');
     } finally {
@@ -131,15 +136,15 @@ const Contact = () => {
                   <ContactInfo
                     icon={<MapPin className="text-white" size={20} />}
                     title="Visit Us"
-                    lines={['123 Innovation Drive', 'Tech Park, Silicon Valley', 'CA 94024, USA']}
+                    lines={['virtual address']}
                   />
                   <ContactInfo
                     icon={<Mail className="text-white" size={20} />}
                     title="Email Us"
                     lines={[
-                      <a href="mailto:info@edizo.com" className="text-gray-700 hover:text-red-500">info@edizo.com</a>,
+                      <a href="mailto:info@edizo.com" className="text-gray-700 hover:text-red-500">e.d.i.z.o.pvt.ltd@gmail.com</a>,
                       <span className="text-sm text-gray-600">For general inquiries</span>,
-                      <a href="mailto:support@edizo.com" className="text-gray-700 hover:text-red-500 mt-2 block">support@edizo.com</a>,
+                      <a href="mailto:support@edizo.com" className="text-gray-700 hover:text-red-500 mt-2 block">edizocorp@gmail.com</a>,
                       <span className="text-sm text-gray-600">For technical support</span>,
                     ]}
                   />
@@ -147,7 +152,7 @@ const Contact = () => {
                     icon={<Phone className="text-white" size={20} />}
                     title="Call Us"
                     lines={[
-                      <a href="tel:+11234567890" className="text-gray-700 hover:text-red-500">+1 (123) 456-7890</a>,
+                      <a href="tel:+11234567890" className="text-gray-700 hover:text-red-500">+917339316924</a>,
                       <span className="text-sm text-gray-600">Mon-Fri: 9:00 AM - 6:00 PM EST</span>
                     ]}
                   />
@@ -212,7 +217,7 @@ const Contact = () => {
                             type={field === 'email' ? 'email' : 'text'}
                             id={field}
                             name={field}
-                            value={formData[field]}
+                            value={formData[field as keyof typeof formData]} // Type assertion for formData access
                             onChange={handleInputChange}
                             required
                             className="input-field border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -261,7 +266,11 @@ const Contact = () => {
                     </div>
                     <div className="text-right">
                       <Button type="submit" disabled={loading}>
-                        {loading ? 'Sending...' : (
+                        {loading ? (
+                          <>
+                            Sending... <Loader2 className="ml-2 w-4 h-4 animate-spin" />
+                          </>
+                        ) : (
                           <>
                             Send Message <Send className="ml-2 w-4 h-4" />
                           </>

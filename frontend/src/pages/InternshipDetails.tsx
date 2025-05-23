@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Calendar,
   Users,
-  Clock,
+
   Wifi,
   Home,
-  ChevronRight,
+  
   Check,
   Send,
   CheckCircle,
@@ -143,7 +143,7 @@ const internshipsData = {
     responsibilities: [
       'Build scalable backend systems using Node.js, Django, or Spring Boot',
       'Work with databases and APIs',
-      'Debug and and fix backend issues',
+      'Debug and fix backend issues',
       'Write clean, maintainable, and secure code',
       'Collaborate with frontend developers to integrate APIs',
       'Follow best practices for security and performance',
@@ -511,10 +511,11 @@ const InternshipDetails: React.FC = () => {
   };
 
   // Define the API base URL.
-  // In development, it might be '/api' (for proxy in vite.config.js).
-  // In production (on Render), import.meta.env.VITE_API_URL will be the full URL of your Render backend.
-  // This variable is set in Render's environment variables for the frontend service.
-  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'; // <-- This line correctly handles the Render backend connection
+  // This value is now hardcoded to your backend's Render URL.
+  // IMPORTANT: You MUST replace 'https://YOUR-BACKEND-RENDER-URL.onrender.com'
+  // with the actual public URL of your backend service on Render.
+  // Example: 'https://edizo-backend.onrender.com'
+  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // <--- REPLACE THIS WITH YOUR ACTUAL BACKEND URL
 
 
   // Handle form submission (directly sends application and email)
@@ -526,7 +527,7 @@ const InternshipDetails: React.FC = () => {
 
     try {
       // Send application data to the backend as JSON
-      // Updated endpoint to use API_BASE_URL
+      // Endpoint uses the directly applied API_BASE_URL
       const applicationResponse = await fetch(`${API_BASE_URL}/submit-application`, {
         method: 'POST',
         headers: {
@@ -547,8 +548,8 @@ const InternshipDetails: React.FC = () => {
       console.log('Application data submitted:', applicationResult);
 
       // Send confirmation email
-      // Updated endpoint to use API_BASE_URL
-      const emailResponse = await fetch(`${API_BASE_URL}/send-email`, {
+      // Endpoint uses the directly applied API_BASE_URL
+      const emailResponse = await fetch(`${API_BASE_URL}/send-email`, { // This call will go to your Render backend
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -784,7 +785,7 @@ const InternshipDetails: React.FC = () => {
                             placeholder="Why are you interested in this internship?"
                           />
                         </div>
-                        <Button
+                        <Button 
                           type="submit"
                           variant="primary"
                           fullWidth
