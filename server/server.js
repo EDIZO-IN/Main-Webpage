@@ -28,8 +28,7 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
     'http://localhost:5173', // Keep this for local Vite development (Vite's default port)
     'https://main-webpage-1.onrender.com', // Your backend's own Render URL (if it also serves frontend)
-    'https://edizo-in.github.io/Main-Webpage/' // <--- REPLACE THIS with your ACTUAL GitHub Pages URL
-    // Example: 'https://arunc18022004.github.io/edizo-website-frontend'
+    'https://edizo-in.github.io/Main-Webpage/' // <--- Your ACTUAL GitHub Pages URL
 ];
 
 app.use(cors({
@@ -147,7 +146,7 @@ async function sendEmail(emailDetails) {
     default: {
       console.warn('Unknown or unspecified email type:', emailDetails.type);
       subject = emailDetails.subject || 'Generic Email';
-      htmlContent = emailDetails.htmlContent || '<p>This is a generic email with no specific type defined.</p>';
+      htmlContent = '<p>This is a generic email with no specific type defined.</p>';
       break;
     }
   }
