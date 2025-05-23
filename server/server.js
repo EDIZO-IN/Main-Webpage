@@ -27,9 +27,8 @@ const PORT = process.env.PORT || 3001;
 // IMPORTANT: This has been updated to your provided Render frontend URL.
 const allowedOrigins = [
     'http://localhost:5173', // Keep this for local Vite development (Vite's default port)
-    'https://main-webpage-1.onrender.com' // <-- Your frontend's deployed Render URL
-    // You might also add a custom domain if you configure one for your frontend.
-    // Example: 'https://www.your-custom-domain.com'
+    'https://main-webpage-1.onrender.com' // <-- REPLACE THIS with your actual frontend's deployed Render URL
+    // Example: If your frontend is at 'https://your-frontend-app.onrender.com', add that here.
 ];
 
 app.use(cors({
