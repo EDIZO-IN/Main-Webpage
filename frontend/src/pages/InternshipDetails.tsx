@@ -509,42 +509,17 @@ const InternshipDetails = () => {
   };
 
   // Define the API base URL.
-  // This value is now hardcoded to your backend's Render URL.
-  // IMPORTANT: You MUST replace 'https://your-backend-render-url.onrender.com'
-  // with the actual public URL of your backend service on Render.
-  // Example: 'https://edizo-backend.onrender.com'
-  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // <--- REPLACE THIS WITH YOUR ACTUAL BACKEND URL
+  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Render backend URL
 
-
-  // Handle form submission (directly sends application and email)
+  // Handle form submission (directly sends email notifications)
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log('Attempting to submit form with data:', formData); // Log data before sending
+    console.log('Attempting to submit form with data:', formData);
     setSubmissionStatus('processing');
-    setSubmissionMessage('Submitting your application and sending confirmation email...');
+    setSubmissionMessage('Sending your application and confirmation email...');
 
     try {
-      // 1. Send application data to the backend for saving
-      const applicationResponse = await fetch(`${API_BASE_URL}/submit-application`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          position: internship.title, // Add internship title to the data
-        }),
-      });
-
-      if (!applicationResponse.ok) {
-        const errorText = await applicationResponse.text();
-        throw new Error(`Failed to submit application data to backend: ${applicationResponse.status} - ${errorText}`);
-      }
-
-      const applicationResult = await applicationResponse.json();
-      console.log('Application data submitted:', applicationResult);
-
-      // 2. Send confirmation email to the applicant
+      // 1. Send confirmation email to the applicant
       const emailToApplicantResponse = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
         headers: {
@@ -560,20 +535,20 @@ const InternshipDetails = () => {
 
       if (!emailToApplicantResponse.ok) {
         const errorText = await emailToApplicantResponse.text();
-        console.warn('Failed to send confirmation email to applicant:', errorText); // Log warning instead of error
-        // Do not throw error here, as application submission might still be successful
+        console.warn('Failed to send confirmation email to applicant:', errorText);
+        // Do not throw error here, as the admin notification should still attempt to send
       } else {
         console.log('Confirmation email sent to applicant.');
       }
 
-      // 3. Send application details notification email to the admin
+      // 2. Send application details notification email to the admin
       const emailToAdminResponse = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: 'internshipApplicationNotification', // New type for admin notification
+          type: 'internshipApplicationNotification', // Type for admin notification
           // No recipientEmail needed here, as it's set in server.js for this type
           name: formData.name,
           email: formData.email,
@@ -587,7 +562,7 @@ const InternshipDetails = () => {
 
       if (!emailToAdminResponse.ok) {
         const errorText = await emailToAdminResponse.text();
-        console.warn('Failed to send application notification email to admin:', errorText); // Log warning
+        throw new Error(`Failed to send application notification to admin: ${emailToAdminResponse.status} - ${errorText}`);
       } else {
         console.log('Application notification email sent to admin.');
       }
@@ -604,7 +579,7 @@ const InternshipDetails = () => {
         message: '',
       });
     } catch (error) {
-      console.error('Error in sending application or email:', error);
+      console.error('Error in sending application emails:', error);
       setSubmissionStatus('error');
       setSubmissionMessage(`Application submission failed: ${error.message}. Please try again.`);
     }

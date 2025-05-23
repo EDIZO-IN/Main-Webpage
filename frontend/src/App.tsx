@@ -13,10 +13,10 @@ import ServiceDetails from './pages/ServiceDetails';
 import Internships from './pages/Internships';
 import InternshipDetails from './pages/InternshipDetails';
 import Contact from './pages/Contact';
-// import Support from './pages/Support';
+// import Support from './pages/Support'; // Commented out as in original
 import NotFound from './pages/NotFound';
 import Projects from './pages/Projects';
-import ProjectDetails from './pages/ProjectDetails'; // Fixed typo here: ProjectDetaila -> ProjectDetails
+import ProjectDetails from './pages/ProjectDetails'; // Corrected component name
 
 const App: React.FC = () => {
   const location = useLocation(); // Get the location object
@@ -39,7 +39,7 @@ const App: React.FC = () => {
           {/* Corrected typo in component name */}
           <Route path="projects/:id" element={<ProjectDetails />} />
           <Route path="contact" element={<Contact />} />
-          {/* <Route path="support" element={<Support />} /> */}
+          {/* <Route path="support" element={<Support />} /> */} {/* Commented out as in original */}
           {/* Wildcard route for 404, should be last within this <Routes> context to ensure other routes are matched first */}
           <Route path="*" element={<NotFound />} />
         </Route>

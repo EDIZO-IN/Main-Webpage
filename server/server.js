@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
 // Load environment variables from .env file.
 // This is crucial for local development. On Render, environment variables
@@ -20,40 +19,6 @@ const app = express();
 // The '|| 3001' is a fallback for local development, allowing the server to run
 // on port 3001 if the PORT environment variable is not explicitly set (which it won't be locally).
 const PORT = process.env.PORT || 3001;
-
-// --- MongoDB Connection ---
-// MONGODB_URI will be an environment variable set on Render.
-// It should point to your MongoDB Atlas cluster or other MongoDB instance.
-// Removed deprecated options: useNewUrlParser and useUnifiedTopology
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('Connected to MongoDB successfully!')) // Log success on connection
-.catch((err) => console.error('MongoDB connection error:', err)); // Log error if connection fails
-
-// --- Mongoose Schema & Model for Contact/Support Messages ---
-// Defines the structure of documents in the 'contactmessages' collection
-const contactMessageSchema = new mongoose.Schema({
-  name: String, // Name of the sender
-  email: String, // Email of the sender
-  phone: String, // Phone number of the sender (optional)
-  subject: String, // Subject of the message
-  message: String, // The actual message content
-  createdAt: { type: Date, default: Date.now }, // Timestamp when the message was created
-});
-const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema); // Create the Mongoose model
-
-// --- Mongoose Schema & Model for Internship Applications ---
-const internshipApplicationSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  phone: String,
-  education: String,
-  experience: String,
-  message: String, // This is the cover letter
-  position: String, // The internship title
-  createdAt: { type: Date, default: Date.now },
-});
-const InternshipApplication = mongoose.model('InternshipApplication', internshipApplicationSchema);
-
 
 // --- Middleware Setup ---
 
@@ -85,28 +50,6 @@ app.use(cors({
 app.use(bodyParser.json()); // Parse incoming request bodies in JSON format
 app.use(bodyParser.urlencoded({ extended: true })); // Parse incoming request bodies in URL-encoded format
 
-// --- Unified Application Submission Endpoint ---
-// This endpoint now saves the application to MongoDB.
-app.post('/submit-application', async (req, res, next) => {
-  const applicationData = req.body; // Get application data from the request body
-  console.log('Backend: Received application data:', applicationData); // Log received data
-
-  try {
-    // Save applicationData to MongoDB
-    const newApplication = new InternshipApplication(applicationData);
-    await newApplication.save();
-    console.log('Application data saved to MongoDB:', newApplication);
-
-    res.status(200).json({
-      success: true,
-      message: 'Application data received and saved successfully.',
-    });
-  } catch (error) {
-    console.error('Backend: Error processing application data:', error); // Log any errors
-    next(error); // Pass the error to the global error handler
-  }
-});
-
 // --- Generic Email Sending Function using Nodemailer ---
 async function sendEmail(emailDetails) {
   // EMAIL_USER and EMAIL_PASS will be environment variables set on Render.
@@ -137,7 +80,6 @@ async function sendEmail(emailDetails) {
           <h2 style="color: #d9534f;">Thank You for Your Application, ${name}!</h2>
           <p>Dear ${name},</p>
           <p>We have successfully received your application for the <strong>${internshipTitle || 'internship'}</strong> at E.D.I.Z.O.</p>
-          <p>Our team will review your application thoroughly and get in touch with you regarding the next steps.</p>
           <p style="margin-top: 20px;">Best regards,</p>
           <p>The E.D.I.Z.O Team</p>
           <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
@@ -222,11 +164,13 @@ async function sendEmail(emailDetails) {
   console.log(`Backend: Email sent to ${recipient} with subject: "${subject}".`);
 }
 
-// --- Main Email Sending Endpoint ---
-// This endpoint can be used for various email types (e.g., application confirmations)
+// --- Main Email Sending Endpoint for Internship Applications ---
+// This endpoint now directly handles email sending for internship applications
 app.post('/send-email', async (req, res, next) => {
   try {
     console.log('Backend: Received request to send email:', req.body);
+    // This endpoint will be used for both applicationConfirmation (to user)
+    // and internshipApplicationNotification (to admin)
     await sendEmail(req.body); // Call the generic sendEmail function
     res.status(200).json({ success: true, message: 'Email sent successfully!' });
   } catch (error) {
@@ -236,22 +180,11 @@ app.post('/send-email', async (req, res, next) => {
 });
 
 // --- Contact Form Submission Endpoint ---
-// This endpoint saves the contact message to MongoDB and sends a notification email.
+// This endpoint now only sends an email notification to the admin, without saving to DB.
 app.post('/send-contact-email', async (req, res, next) => {
   try {
     console.log('Backend: Received contact form data:', req.body);
     const { name, email, phone, subject, message } = req.body;
-
-    // Save contact message to MongoDB using the Mongoose model
-    const newMessage = new ContactMessage({
-      name,
-      email,
-      phone,
-      subject,
-      message,
-    });
-    const savedMessage = await newMessage.save(); // Save the new message to the database
-    console.log('Contact message saved to MongoDB:', savedMessage);
 
     // CONTACT_FORM_RECIPIENT_EMAIL will be an environment variable set on Render.
     // This is the email address where you want to receive contact form notifications.
@@ -267,7 +200,7 @@ app.post('/send-contact-email', async (req, res, next) => {
       message,
     });
 
-    res.status(200).json({ success: true, message: 'Contact message sent and saved successfully!' });
+    res.status(200).json({ success: true, message: 'Contact message sent successfully!' });
   } catch (error) {
     console.error('Backend: Error in /send-contact-email endpoint:', error);
     next(error); // Pass the error to the global error handler

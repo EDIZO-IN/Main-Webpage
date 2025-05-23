@@ -75,10 +75,8 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Directly applying the backend Render URL
-  // IMPORTANT: In a real-world scenario, it's highly recommended to use environment variables
-  // (e.g., import.meta.env.VITE_API_URL) for flexibility across environments (development, staging, production).
-  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Replace with your actual backend Render URL
+  // Define the API base URL.
+  const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Render backend URL
 
   const handleSubmit = async (e) => {
     e.preventDefault();
