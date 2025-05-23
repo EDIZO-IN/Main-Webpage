@@ -510,6 +510,12 @@ const InternshipDetails: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Define the API base URL.
+  // In development, it might be '/api' (for proxy in vite.config.js).
+  // In production (on GitHub Pages), import.meta.env.VITE_API_URL will be the full URL of your Render backend.
+  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+
   // Handle form submission (directly sends application and email)
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -519,7 +525,8 @@ const InternshipDetails: React.FC = () => {
 
     try {
       // Send application data to the backend as JSON
-      const applicationResponse = await fetch('http://localhost:3001/submit-application', {
+      // Updated endpoint to use API_BASE_URL
+      const applicationResponse = await fetch(`${API_BASE_URL}/submit-application`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Specify content type as JSON
@@ -539,7 +546,8 @@ const InternshipDetails: React.FC = () => {
       console.log('Application data submitted:', applicationResult);
 
       // Send confirmation email
-      const emailResponse = await fetch('http://localhost:3001/send-email', {
+      // Updated endpoint to use API_BASE_URL
+      const emailResponse = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

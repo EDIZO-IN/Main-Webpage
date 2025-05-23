@@ -45,11 +45,10 @@ const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema); /
 
 // CORS configuration is crucial for production.
 // The 'origin' list should include your frontend's deployed Render URL.
-// You will get this URL AFTER you deploy your frontend on Render.
+// IMPORTANT: This has been updated to your provided Render frontend URL.
 const allowedOrigins = [
     'http://localhost:5173', // Keep this for local Vite development (Vite's default port)
-    // IMPORTANT: Add your frontend's deployed Render URL here after it's live.
-    // Example: 'https://edizo-frontend.onrender.com'
+    'https://main-webpage-1.onrender.com' // <-- Your frontend's deployed Render URL
     // You might also add a custom domain if you configure one for your frontend.
     // Example: 'https://www.your-custom-domain.com'
 ];
