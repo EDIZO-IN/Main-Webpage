@@ -512,7 +512,8 @@ const InternshipDetails: React.FC = () => {
 
   // Define the API base URL.
   // In development, it might be '/api' (for proxy in vite.config.js).
-  // In production (on GitHub Pages), import.meta.env.VITE_API_URL will be the full URL of your Render backend.
+  // In production (on Render), import.meta.env.VITE_API_URL will be the full URL of your Render backend.
+  // This variable is set in Render's environment variables for the frontend service.
   const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 
