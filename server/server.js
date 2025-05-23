@@ -1,25 +1,35 @@
+// backend/server.js
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose'; // Mongoose for MongoDB
+import mongoose from 'mongoose';
 
-dotenv.config(); // Load environment variables from .env file
+// Load environment variables from .env file.
+// This is crucial for local development. On Render, environment variables
+// are configured directly in the service settings.
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001; // Define the port for the server
 
-// Connect to MongoDB
-// This uses the MONGODB_URI from your .env file to connect to your MongoDB instance (local or cloud)
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true, // Use the new URL parser
-  useUnifiedTopology: true, // Use the new server discovery and monitoring engine
-})
+// --- PORT Configuration (Already Optimal for Render and Local Development) ---
+// Render automatically provides a PORT environment variable in production.
+// Your application MUST listen on process.env.PORT when deployed to Render.
+// The '|| 3001' is a fallback for local development, allowing the server to run
+// on port 3001 if the PORT environment variable is not explicitly set (which it won't be locally).
+const PORT = process.env.PORT || 3001;
+
+// --- MongoDB Connection ---
+// MONGODB_URI will be an environment variable set on Render.
+// It should point to your MongoDB Atlas cluster or other MongoDB instance.
+// Removed deprecated options: useNewUrlParser and useUnifiedTopology
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('Connected to MongoDB successfully!')) // Log success on connection
 .catch((err) => console.error('MongoDB connection error:', err)); // Log error if connection fails
 
-// Mongoose schema & model for contact/support messages
+// --- Mongoose Schema & Model for Contact/Support Messages ---
 // Defines the structure of documents in the 'contactmessages' collection
 const contactMessageSchema = new mongoose.Schema({
   name: String, // Name of the sender
@@ -31,17 +41,43 @@ const contactMessageSchema = new mongoose.Schema({
 });
 const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema); // Create the Mongoose model
 
-// Middleware setup
-app.use(cors()); // Enable Cross-Origin Resource Sharing for all routes
+// --- Middleware Setup ---
+
+// CORS configuration is crucial for production.
+// The 'origin' list should include your frontend's deployed Render URL.
+// You will get this URL AFTER you deploy your frontend on Render.
+const allowedOrigins = [
+    'http://localhost:5173', // Keep this for local Vite development (Vite's default port)
+    // IMPORTANT: Add your frontend's deployed Render URL here after it's live.
+    // Example: 'https://edizo-frontend.onrender.com'
+    // You might also add a custom domain if you configure one for your frontend.
+    // Example: 'https://www.your-custom-domain.com'
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (e.g., from Postman, curl, or same-origin if backend serves frontend)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
+    credentials: true, // Allow cookies, authorization headers, etc. to be sent
+    optionsSuccessStatus: 204 // For preflight requests, return 204 No Content
+}));
+
 app.use(bodyParser.json()); // Parse incoming request bodies in JSON format
 app.use(bodyParser.urlencoded({ extended: true })); // Parse incoming request bodies in URL-encoded format
 
-// Dummy user store (not used in this version, but kept for potential future use)
+// --- Dummy user store (not used in this version, but kept for potential future use) ---
 const users = [];
 
-// Unified application submission endpoint
+// --- Unified Application Submission Endpoint ---
 // This endpoint currently only acknowledges receipt and does not save to any database.
-app.post('/submit-application', async (req, res, next) => { // Added 'next' for error handling
+app.post('/submit-application', async (req, res, next) => {
   const applicationData = req.body; // Get application data from the request body
   console.log('Backend: Received application data:', applicationData); // Log received data
 
@@ -49,6 +85,7 @@ app.post('/submit-application', async (req, res, next) => { // Added 'next' for 
     // TODO: If you need to save applicationData to MongoDB, add your Mongoose model logic here.
     // Example: const newApplication = new ApplicationModel(applicationData);
     // await newApplication.save();
+    // console.log('Application data saved to MongoDB:', newApplication);
 
     res.status(200).json({
       success: true,
@@ -60,14 +97,15 @@ app.post('/submit-application', async (req, res, next) => { // Added 'next' for 
   }
 });
 
-// Generic email sending function using Nodemailer
+// --- Generic Email Sending Function using Nodemailer ---
 async function sendEmail(emailDetails) {
-  // Create a Nodemailer transporter using Gmail service and credentials from .env
+  // EMAIL_USER and EMAIL_PASS will be environment variables set on Render.
+  // Ensure EMAIL_PASS is an App Password if using Gmail with 2FA.
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'gmail', // Using Gmail service
     auth: {
-      user: process.env.EMAIL_USER, // Your Gmail email address
-      pass: process.env.EMAIL_PASS, // Your Gmail App Password
+      user: process.env.EMAIL_USER, // Your Gmail email address (from Render env var)
+      pass: process.env.EMAIL_PASS, // Your Gmail App Password (from Render env var)
     },
   });
 
@@ -76,7 +114,7 @@ async function sendEmail(emailDetails) {
   const recipient = emailDetails.recipientEmail || emailDetails.email; // Determine recipient email
 
   if (!recipient) {
-    throw new Error('No recipient email provided.'); // Throw error if no recipient
+    throw new Error('No recipient email provided for sending email.'); // Throw error if no recipient
   }
 
   // Generate email content based on the email type
@@ -136,7 +174,7 @@ async function sendEmail(emailDetails) {
 
   // Mail options for Nodemailer
   const mailOptions = {
-    from: process.env.EMAIL_USER, // Sender email
+    from: process.env.EMAIL_USER, // Sender email (from Render env var)
     to: recipient, // Recipient email
     subject, // Email subject
     html: htmlContent, // Email HTML content
@@ -146,9 +184,9 @@ async function sendEmail(emailDetails) {
   console.log(`Backend: Email sent to ${recipient} with subject: "${subject}".`);
 }
 
-// Main email sending endpoint
+// --- Main Email Sending Endpoint ---
 // This endpoint can be used for various email types (e.g., application confirmations)
-app.post('/send-email', async (req, res, next) => { // Added 'next' for error handling
+app.post('/send-email', async (req, res, next) => {
   try {
     console.log('Backend: Received request to send email:', req.body);
     await sendEmail(req.body); // Call the generic sendEmail function
@@ -159,9 +197,9 @@ app.post('/send-email', async (req, res, next) => { // Added 'next' for error ha
   }
 });
 
-// Contact form submission endpoint
+// --- Contact Form Submission Endpoint ---
 // This endpoint saves the contact message to MongoDB and sends a notification email.
-app.post('/send-contact-email', async (req, res, next) => { // Added 'next' for error handling
+app.post('/send-contact-email', async (req, res, next) => {
   try {
     console.log('Backend: Received contact form data:', req.body);
     const { name, email, phone, subject, message } = req.body;
@@ -177,10 +215,10 @@ app.post('/send-contact-email', async (req, res, next) => { // Added 'next' for 
     const savedMessage = await newMessage.save(); // Save the new message to the database
     console.log('Contact message saved to MongoDB:', savedMessage);
 
-    // Determine the recipient for the contact form notification email
+    // CONTACT_FORM_RECIPIENT_EMAIL will be an environment variable set on Render.
+    // This is the email address where you want to receive contact form notifications.
     const recipientEmailForContact = process.env.CONTACT_FORM_RECIPIENT_EMAIL || process.env.EMAIL_USER;
 
-    // Send a notification email about the new contact form submission
     await sendEmail({
       type: 'contactForm',
       recipientEmail: recipientEmailForContact,
@@ -198,7 +236,7 @@ app.post('/send-contact-email', async (req, res, next) => { // Added 'next' for 
   }
 });
 
-// Global Error Handling Middleware
+// --- Global Error Handling Middleware ---
 // This middleware will catch any errors passed via next(error) from the routes
 // and send a consistent JSON error response to the client.
 app.use((err, req, res, next) => {
@@ -206,12 +244,13 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message || 'An unexpected error occurred on the server.',
-    error: process.env.NODE_ENV === 'production' ? {} : err.stack // Provide stack in development
+    // In production, avoid sending detailed error stacks to the client for security.
+    error: process.env.NODE_ENV === 'production' ? {} : err.stack
   });
 });
 
-
-// Start the server
+// --- Start the server ---
+// The server will listen on the port provided by Render (process.env.PORT)
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT} (or Render's assigned port)`);
 });
