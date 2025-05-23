@@ -24,10 +24,12 @@ const PORT = process.env.PORT || 3001;
 
 // CORS configuration is crucial for production.
 // The 'origin' list should include your frontend's deployed Render URL.
-// IMPORTANT: This has been updated to your provided Render frontend URL.
+// IMPORTANT: You need to add your GitHub Pages URL here!
 const allowedOrigins = [
     'http://localhost:5173', // Keep this for local Vite development (Vite's default port)
-    'https://main-webpage-1.onrender.com' // Your actual frontend's deployed Render URL
+    'https://main-webpage-1.onrender.com', // Your backend's own Render URL (if it also serves frontend)
+    'https://edizo-in.github.io/Main-Webpage/' // <--- REPLACE THIS with your ACTUAL GitHub Pages URL
+    // Example: 'https://arunc18022004.github.io/edizo-website-frontend'
 ];
 
 app.use(cors({
