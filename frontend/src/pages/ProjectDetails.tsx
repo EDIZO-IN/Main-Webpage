@@ -53,7 +53,7 @@ const ProjectDetails: React.FC = () => {
         backgroundImage={project.image}
         className="bg-gradient-to-r from-blue-800 to-purple-900"
       />
-
+     
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">

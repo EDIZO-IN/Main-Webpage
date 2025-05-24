@@ -582,6 +582,7 @@ const InternshipDetails = () => {
       <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-12">
         <span className="text-red-600">{internship.title}</span> Internship Application
       </h1>
+      
 
       <section className="section bg-gray-100 w-full max-w-6xl">
         <div className="container-custom">

@@ -150,8 +150,8 @@ const Internships: React.FC = () => {
   return (
     <>
       <PageHeader
-        title="Internship Opportunities"
-        subtitle="Jumpstart your career with real-world experience in a dynamic, innovative environment"
+        title={<span className="text-red-500">Internship Opportunities</span>}
+        subtitle={<span className="text-white">Jumpstart your career with real-world experience in a dynamic, innovative environment,</span>}
         backgroundImage={header}
       />
       <section className="section bg-white">

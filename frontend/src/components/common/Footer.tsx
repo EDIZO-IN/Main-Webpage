@@ -1,16 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react'; // Import Youtube icon
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+
+// Assuming 'Logo' is a named export from '../common/Logo'
+// If 'Logo' is a default export, change this to: import Logo from '../common/Logo';
+import  Logo  from '../common/Logo'; // Corrected import for Logo component
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-edizo-black text-white">
-      <div className="container-custom py-16">
+    <footer className="bg-gray-900 text-white"> {/* Replaced bg-edizo-black with bg-gray-900 */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"> {/* Replaced container-custom with standard responsive container classes */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
           <div>
-            {/* Placeholder for Logo component - assuming it's defined elsewhere */}
-            {/* <Logo isFooter /> */}
-            <h2 className="text-2xl font-bold text-white mb-4">Edizo</h2> {/* Placeholder for Logo */}
+            {/* Logo component is now correctly imported and used */}
+            <Logo isFooter />
             <p className="mt-4 text-gray-400 max-w-xs">
               Edizo is committed to providing innovative solutions and services to help businesses grow and succeed.
             </p>
@@ -28,7 +33,7 @@ const Footer: React.FC = () => {
               <a href="https://www.linkedin.com/in/edizo-pvt-ltd-149748367/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300">
                 <Linkedin size={20} />
               </a>
-              <a href="https://www.youtube.com/@team-edizo" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300">
+              <a href="https://www.youtube.com/@edizopvtltd" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-300">
                 <Youtube size={20} /> {/* YouTube icon */}
               </a>
             </div>
@@ -100,28 +105,28 @@ const Footer: React.FC = () => {
             <h3 className="text-xl font-bold mb-4 text-white">Contact</h3>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <MapPin className="mr-3 text-red-500 mt-1 flex-shrink-0" size={18} /> {/* Changed to red-500 for better visibility */}
+                <MapPin className="mr-3 text-red-500 mt-1 flex-shrink-0" size={18} />
                 <span className="text-gray-400">
-                  123 Innovation Drive, Tech Park, Silicon Valley, CA 94024
+                  Virtual Address
                 </span>
               </li>
               <li className="flex items-center">
-                <Phone className="mr-3 text-red-500 flex-shrink-0" size={18} /> {/* Changed to red-500 */}
-                <a href="tel:+11234567890" className="text-gray-400 hover:text-white transition-colors duration-300">
-                  +1 (123) 456-7890
+                <Phone className="mr-3 text-red-500 flex-shrink-0" size={18} />
+                <a href="tel:+917339316924" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  +91 73393 16924
                 </a>
               </li>
               <li className="flex items-center">
-                <Mail className="mr-3 text-red-500 flex-shrink-0" size={18} /> {/* Changed to red-500 */}
-                <a href="mailto:info@edizo.com" className="text-gray-400 hover:text-white transition-colors duration-300">
-                  info@edizo.com
+                <Mail className="mr-3 text-red-500 flex-shrink-0" size={18} />
+                <a href="mailto:edizocorp@gmail.com" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  edizocorp@gmail.com
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-700 text-center md:flex md:justify-between md:items-center"> {/* Changed border color */}
+        <div className="mt-12 pt-8 border-t border-gray-700 text-center md:flex md:justify-between md:items-center">
           <p className="text-gray-400 text-sm">
             &copy; {new Date().getFullYear()} Edizo. All rights reserved.
           </p>

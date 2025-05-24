@@ -75,11 +75,11 @@ const Services: React.FC = () => {
 
   return (
     <>
+     
       <PageHeader
-        title="Our Services"
-        subtitle="Comprehensive digital solutions tailored to your business needs"
+        title={<span className="text-red-500">Our Services</span>}
+        subtitle={<span className="text-white">Comprehensive digital solutions tailored to your business needs</span>}
         backgroundImage={headerBackground}
-        className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
       />
 
       <section className="py-16 bg-gray-50">

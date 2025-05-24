@@ -91,11 +91,11 @@ const Projects: React.FC = () => {
 
   return (
     <>
+     
       <PageHeader
-        title="Our Projects"
-        subtitle="Innovative solutions delivering real business impact"
+        title={<span className="text-red-500">Our Projects</span>}
+        subtitle={<span className="text-white">Innovative solutions delivering real business impact</span>}
         backgroundImage={headerBackground}
-        className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"
       />
 
       <section className="section bg-gray-50 py-20">

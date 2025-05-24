@@ -120,10 +120,10 @@ const Contact = () => {
   return (
     <>
       <PageHeader
-        title="Contact Us"
-        subtitle="Get in touch with our team for any inquiries or assistance"
-        backgroundImage="https://images.pexels.com/photos/7413915/pexels-photo-7413915.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      />
+  title={<span className="text-red-500 ">Contact Us</span>} // Title in red
+  subtitle={<span className="text-white">Get in touch with our team for any inquiries or assistance</span>} // Subtitle in white
+  backgroundImage="https://images.pexels.com/photos/7413915/pexels-photo-7413915.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+/>
 
       <section className="section bg-white p-8">
         <div className="max-w-6xl mx-auto px-4"> {/* Using container-custom equivalent with Tailwind */}
