@@ -68,9 +68,7 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState(null);
 
-  const handleInputChange = (
-    e
-  ) => {
+  const handleInputChange = (e) => { // Removed 'e' type annotation
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -306,7 +304,7 @@ const App = () => {
   return (
     <>
       {/* Link to Font Awesome for social media icons */}
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       <main className="min-h-screen bg-gray-50 font-sans antialiased">
         <Contact />
       </main>
