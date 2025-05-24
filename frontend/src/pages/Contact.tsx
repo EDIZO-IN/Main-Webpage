@@ -171,10 +171,11 @@ const Contact = () => {
                   <div className="flex space-x-4">
                     {/* Social media icons with actual URLs */}
                     {[
-                      { platform: 'Facebook', url: 'https://www.facebook.com/your-facebook-id' },
-                      { platform: 'Twitter', url: 'https://twitter.com/your-twitter-id' },
-                      { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/your-linkedin-id' },
-                      { platform: 'Instagram', url: 'https://www.instagram.com/your-instagram-id' }
+                      { platform: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61576742758066' },
+                      { platform: 'Twitter', url: 'https://x.com/EdizoPvtLtd' },
+                      { platform: 'LinkedIn', url: 'https://www.linkedin.com/in/edizo-pvt-ltd-149748367/' },
+                      { platform: 'Instagram', url: 'https://www.instagram.com/e.d.i.z.o._official/' },
+                      { platform: 'Youtube',  url: 'https://www.youtube.com/@team-edizo'}
                     ].map((social, i) => (
                       <a
                         key={i}
