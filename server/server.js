@@ -56,10 +56,12 @@ async function sendEmail(emailDetails) {
             subject = `Application Confirmation - ${internshipTitle || 'Internship'}`;
             htmlContent = `
                 <div style="font-family: Arial; color: #333;">
-                    <h2>Thank you, ${name}!</h2>
-                    <p>Your application for <strong>${internshipTitle}</strong> has been received.</p>
-                    <p>We appreciate your interest.</p>
-                    <p>- E.D.I.Z.O Team</p>
+                    <h2>Thank you for your Application, ${name}!</h2>
+                    <p>We have successfully received your application for the <strong>${internshipTitle}</strong> at E.D.I.Z.O.</p>
+                    <p>Our team will review your application throughly and get in touch with you regarding the next steps.</p>
+                    <p> In the meantime,if you have any questions,please do not heasitate to contact us</p>
+                    <p>Best regards,</p>
+                    <p>The E.D.I.Z.O Team</p>
                 </div>
             `;
             break;
