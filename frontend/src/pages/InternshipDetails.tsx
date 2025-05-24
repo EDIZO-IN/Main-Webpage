@@ -501,9 +501,7 @@ const InternshipDetails = () => {
   });
 
   // Handle input changes for text fields
-  const handleInputChange = (
-    e
-  ) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -520,56 +518,50 @@ const InternshipDetails = () => {
 
     try {
       // 1. Send confirmation email to the applicant
-      const emailToApplicantResponse = await fetch(`${API_BASE_URL}/send-email`, {
+      const applicantRes = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'applicationConfirmation',
           name: formData.name,
           email: formData.email,
-          internshipTitle: internship.title,
+          internshipTitle: internship?.title || 'Internship',
         }),
       });
 
-      if (!emailToApplicantResponse.ok) {
-        const errorText = await emailToApplicantResponse.text();
+      if (!applicantRes.ok) {
+        const errorText = await applicantRes.text();
         console.warn('Failed to send confirmation email to applicant:', errorText);
-        // Do not throw error here, as the admin notification should still attempt to send
+        // Do not throw error here, as admin email might still succeed.
       } else {
         console.log('Confirmation email sent to applicant.');
       }
 
       // 2. Send application details notification email to the admin
-      const emailToAdminResponse = await fetch(`${API_BASE_URL}/send-email`, {
+      const adminRes = await fetch(`${API_BASE_URL}/send-email`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'internshipApplicationNotification', // Type for admin notification
-          // No recipientEmail needed here, as it's set in server.js for this type
+          type: 'internshipApplicationNotification',
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          education: formData.education,
-          experience: formData.experience,
-          message: formData.message, // This is the cover letter
-          internshipTitle: internship.title,
+          education: formData.education, // Corrected from formData.experience
+          experience: formData.experience, // Ensure experience is passed
+          message: formData.message,
+          internshipTitle: internship?.title || 'Internship',
         }),
       });
 
-      if (!emailToAdminResponse.ok) {
-        const errorText = await emailToAdminResponse.text();
-        throw new Error(`Failed to send application notification to admin: ${emailToAdminResponse.status} - ${errorText}`);
-      } else {
-        console.log('Application notification email sent to admin.');
+      if (!adminRes.ok) {
+        const errorText = await adminRes.text();
+        throw new Error(`Failed to notify admin: ${adminRes.status} - ${errorText}`);
       }
-
+      console.log('Application notification email sent to admin.');
       setSubmissionStatus('success');
       setSubmissionMessage('Application submitted successfully! A confirmation email has been sent to you.');
-      // Reset form data for a new application
+
+      // Reset the form
       setFormData({
         name: '',
         email: '',
@@ -581,7 +573,7 @@ const InternshipDetails = () => {
     } catch (error) {
       console.error('Error in sending application emails:', error);
       setSubmissionStatus('error');
-      setSubmissionMessage(`Application submission failed: ${error.message}. Please try again.`);
+      setSubmissionMessage(`Application submission failed: ${error.message}`);
     }
   };
 
