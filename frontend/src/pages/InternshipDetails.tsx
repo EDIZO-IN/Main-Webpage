@@ -695,7 +695,7 @@ const InternshipDetails = () => {
                             onChange={handleInputChange}
                             required
                             className={inputFieldClasses}
-                            placeholder="John Doe"
+                            placeholder="Enter Name"
                           />
                         </div>
                         <div>
@@ -710,7 +710,7 @@ const InternshipDetails = () => {
                             onChange={handleInputChange}
                             required
                             className={inputFieldClasses}
-                            placeholder="john@example.com"
+                            placeholder="Example@gmail.com"
                           />
                         </div>
                         <div>
