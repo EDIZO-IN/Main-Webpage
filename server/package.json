@@ -1,16 +1,12 @@
 {
   "name": "server",
-  "version": "1.1.0",
-  "description": "Backend for full-stack app",
-  "main": "server.js",
-  "type": "module",
+  "version": "1.1.1",
+  "private":"true",
+  "type":"module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
