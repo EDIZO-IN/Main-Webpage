@@ -2,7 +2,7 @@
   "name": "edizo-fullstack-app",
   "version": "1.1.1",
   "private": true,
-  "homepage": "https://EDIZO-IN.github.io/Main-Webpage/",
+  "homepage": "https://github.com/EDIZO-IN/Main-Webpage.git",
   "scripts": {
     "client": "npm start --prefix frontend",
     "server": "npm start --prefix server",
