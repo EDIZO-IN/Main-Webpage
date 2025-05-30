@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Calendar, Users, Clock, Wifi, Home, ArrowRight } from 'lucide-react';
+import { Clock, Wifi, Home, ArrowRight } from 'lucide-react';
 import PageHeader from '../components/common/PageHeader';
 import AnimatedSection from '../components/common/AnimatedSection';
-import Button from '../components/common/Button';
+
 import header from '../assets/background image/internship.png';
 
 // Import local images

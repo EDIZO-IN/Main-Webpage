@@ -8,7 +8,7 @@ import {
   PenTool,
   Video,
   ImageIcon,
-  Lightbulb, // Using Lightbulb for Web Development
+   // Using Lightbulb for Web Development
   Briefcase,
   Code, // Importing Code for a more specific icon if needed
 } from 'lucide-react';
@@ -31,35 +31,6 @@ import Epicnexus from '../assets/project/Epic-nexus.png';
 import backgroundimage from '../assets/background image/home.webp';
 
 const Home: React.FC = () => {
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      position: 'CEO, TechStart',
-      content:
-        'Edizo transformed our business with their innovative solutions. Their team was incredibly professional and delivered beyond our expectations.',
-      avatar:
-        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      position: 'CTO, GrowthHub',
-      content:
-        'The internship program at Edizo provided our company with top talent. Their training approach ensures students are industry-ready.',
-      avatar:
-        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    },
-    {
-      id: 3,
-      name: 'Jennifer Lopez',
-      position: 'Marketing Director, BrandX',
-      content:
-        'Our digital marketing campaigns saw a 300% increase in conversion after partnering with Edizo. Their strategy was spot on!',
-      avatar:
-        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    },
-  ];
 
   // Animation Variants
   const fadeInUp = {

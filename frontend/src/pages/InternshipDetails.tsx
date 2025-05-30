@@ -15,7 +15,7 @@ import { motion } from 'framer-motion';
 
 // --- Placeholder image URLs (to resolve compilation errors) ---
 // These are used instead of local image imports.
-const placeholderImage = (text) => `https://placehold.co/150x150/E0E0E0/666666?text=${encodeURIComponent(text)}`;
+const placeholderImage = (text: string | number | boolean) => `https://placehold.co/150x150/E0E0E0/666666?text=${encodeURIComponent(text)}`;
 
 // --- Reusable Components (Simplified for this example) ---
 
@@ -501,7 +501,7 @@ const InternshipDetails = () => {
   });
 
   // Handle input changes for text fields
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -510,7 +510,7 @@ const InternshipDetails = () => {
   const API_BASE_URL = 'https://main-webpage-1.onrender.com'; // Render backend URL
 
   // Handle form submission (directly sends email notifications)
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Attempting to submit form with data:', formData);
     setSubmissionStatus('processing');
@@ -639,7 +639,7 @@ const InternshipDetails = () => {
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Responsibilities</h3>
                   <ul className="space-y-3">
-                    {internship.responsibilities.map((item, index) => (
+                    {internship.responsibilities.map((item: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
                       <li key={index} className="flex items-start text-gray-700">
                         <Check className="text-red-500 mr-2 mt-1 flex-shrink-0" size={18} />
                         <span>{item}</span>
@@ -652,7 +652,7 @@ const InternshipDetails = () => {
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Requirements</h3>
                   <ul className="space-y-3">
-                    {internship.requirements.map((item, index) => (
+                    {internship.requirements.map((item: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
                       <li key={index} className="flex items-start text-gray-700">
                         <Check className="text-red-500 mr-2 mt-1 flex-shrink-0" size={18} />
                         <span>{item}</span>
@@ -665,7 +665,7 @@ const InternshipDetails = () => {
                 <div>
                   <h3 className="text-2xl font-bold text-gray-800 mb-4">Benefits</h3>
                   <ul className="space-y-3">
-                    {internship.benefits.map((item, index) => (
+                    {internship.benefits.map((item: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
                       <li key={index} className="flex items-start text-gray-700">
                         <Check className="text-red-500 mr-2 mt-1 flex-shrink-0" size={18} />
                         <span>{item}</span>

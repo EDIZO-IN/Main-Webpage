@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Code,
-  Smartphone, // Still imported but not used in the 4 services
+   // Still imported but not used in the 4 services
   TrendingUp, // Still imported but not used in the 4 services
   PenTool,
-  Headphones, // Still imported but not used in the 4 services
-  BarChart3, // Still imported but not used in the 4 services
+   // Still imported but not used in the 4 services
+   // Still imported but not used in the 4 services
   Check,
   MessageSquare,
   Award,
