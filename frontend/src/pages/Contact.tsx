@@ -160,7 +160,7 @@ const Contact = () => {
                     icon={<Phone className="text-white" size={20} />}
                     title="Call Us"
                     lines={[
-                      <a href="tel:+917339316924" className="text-gray-700 hover:text-red-500">+917339316924</a>,
+                      <a href="tel:+917339316924" className="text-gray-700 hover:text-red-500">+917092435729</a>,
                       <span className="text-sm text-gray-600">Mon-Fri: 9:00 AM - 6:00 PM EST</span>
                     ]}
                   />
