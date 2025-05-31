@@ -129,99 +129,81 @@ const Home: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* Services Section */}
-      <section className="section bg-white py-20">
-        <div className="container mx-auto px-4">
-          <AnimatedSection>
-            <motion.h2
-              initial={{ y: -30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 120, damping: 10 }}
-              className="text-3xl md:text-4xl font-bold mb-4 text-center"
+{/* Services Section */}
+<section className="section bg-white py-20">
+  <div className="container mx-auto px-4">
+    <AnimatedSection>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+        Our Premium Services
+      </h2>
+      <p className="text-lg text-gray-600 max-w-2xl mx-auto text-center">
+        We offer specialized services tailored to help your brand stand out visually and digitally.
+      </p>
+    </AnimatedSection>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+      {[
+        {
+          title: 'UI/UX Design',
+          desc: 'Create intuitive and engaging digital experiences through user-centered design principles that enhance usability and aesthetics.',
+          icon: <PenTool />,
+          image: uiuxImg,
+          link: '/services/ui-ux',
+        },
+        {
+          title: 'Video Editing',
+          desc: 'Professional video editing services to bring your creative vision to life — from raw footage to polished final product.',
+          icon: <Video />,
+          image: videoImg,
+          link: '/services/video-editing',
+        },
+        {
+          title: 'Graphic Design',
+          desc: 'Creative visual content creation for branding, marketing, and digital media tailored to your business identity.',
+          icon: <ImageIcon />,
+          image: graphicImg,
+          link: '/services/graphic-design',
+        },
+        {
+          title: 'Web Development',
+          desc: 'Building responsive, scalable, and secure websites and web applications tailored to your business needs and objectives.',
+          icon: <Code />,
+          image: webDevImg,
+          link: '/services/web-development',
+        },
+      ].map((service, i) => (
+        <div key={i} className="card p-6 rounded-xl hover:shadow-2xl transition-all duration-300 group">
+          <img
+            src={service.image}
+            alt={service.title}
+            className="w-full h-48 object-cover rounded-lg mb-4 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md"
+          />
+          <div className="bg-red-500 rounded-full w-14 h-14 flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform duration-300 mx-auto">
+            {service.icon}
+          </div>
+          <h3 className="text-xl font-semibold mb-3 text-center">{service.title}</h3>
+          <p className="text-gray-700 mb-4 text-center">{service.desc}</p>
+          <div className="text-center">
+            <Link
+              to={service.link}
+              className="inline-flex items-center text-red-500 font-medium hover:underline"
             >
-              Our Premium Services
-            </motion.h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto text-center">
-              We offer specialized services tailored to help your brand stand out visually and digitally.
-            </p>
-          </AnimatedSection>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
-          >
-            {[
-              {
-                title: 'UI/UX Design',
-                desc: 'Create intuitive and engaging digital experiences through user-centered design principles that enhance usability and aesthetics.',
-                icon: <PenTool />,
-                image: uiuxImg,
-                link: '/services/ui-ux',
-              },
-              {
-                title: 'Video Editing',
-                desc: 'Professional video editing services to bring your creative vision to life — from raw footage to polished final product.',
-                icon: <Video />,
-                image: videoImg,
-                link: '/services/video-editing',
-              },
-              {
-                title: 'Graphic Design',
-                desc: 'Creative visual content creation for branding, marketing, and digital media tailored to your business identity.',
-                icon: <ImageIcon />,
-                image: graphicImg,
-                link: '/services/graphic-design',
-              },
-              {
-                title: 'Web Development',
-                desc: 'Building responsive, scalable, and secure websites and web applications tailored to your business needs and objectives.',
-                icon: <Code />,
-                image: webDevImg,
-                link: '/services/web-development',
-              },
-            ].map((service, i) => (
-              <motion.div
-                key={i}
-                variants={fadeInUp}
-                whileHover="hover"
-                drag
-                dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
-                className="card p-6 rounded-xl hover:shadow-2xl transition-all duration-300 group"
-              >
-                <img
-                  src={service.image}
-                  alt={service.title}
-                  className="w-full h-48 object-cover rounded-lg mb-4 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md"
-                />
-                <div className="bg-red-500 rounded-full w-14 h-14 flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform duration-300 mx-auto">
-                  {service.icon}
-                </div>
-                <h3 className="text-xl font-semibold mb-3 text-center">{service.title}</h3>
-                <p className="text-gray-700 mb-4 text-center">{service.desc}</p>
-                <div className="text-center">
-                  <Link
-                    to={service.link}
-                    className="inline-flex items-center text-red-500 font-medium hover:underline"
-                  >
-                    Learn more <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <AnimatedSection delay={0.4}>
-            <div className="text-center mt-12">
-              <Button variant="primary" to="/services">
-                View All Services
-              </Button>
-            </div>
-          </AnimatedSection>
+              Learn more <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+    <AnimatedSection delay={0.4}>
+      <div className="text-center mt-12">
+        <Button variant="primary" to="/services">
+          View All Services
+        </Button>
+      </div>
+    </AnimatedSection>
+  </div>
+</section>
 
       {/* Projects Section */}
       <section className="section bg-white py-20">
