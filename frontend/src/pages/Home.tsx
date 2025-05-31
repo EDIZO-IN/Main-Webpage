@@ -116,7 +116,6 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
-
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -134,7 +133,7 @@ const Home: React.FC = () => {
             <motion.h2
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 120, damping: 10 }}
+              transition={{ type: 'spring', stiffness: 120, damping: 10 }}
               className="text-3xl md:text-4xl font-bold mb-4 text-center"
             >
               Our Premium Services
@@ -185,7 +184,6 @@ const Home: React.FC = () => {
                 key={i}
                 variants={fadeInUp}
                 whileHover="hover"
-            
                 drag
                 dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
                 className="card p-6 rounded-xl hover:shadow-2xl transition-all duration-300 group"
@@ -229,7 +227,7 @@ const Home: React.FC = () => {
             <motion.h2
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 120, damping: 10 }}
+              transition={{ type: 'spring', stiffness: 120, damping: 10 }}
               className="text-3xl md:text-4xl font-bold mb-4 text-center"
             >
               Featured Projects
@@ -360,7 +358,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Call to Action Section */}
       <section className="section bg-gradient-to-r from-red-700 to-orange-800 text-white py-20">
         <div className="container mx-auto px-4">
           <AnimatedSection>
