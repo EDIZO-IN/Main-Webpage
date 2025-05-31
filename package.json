@@ -2,7 +2,7 @@
   "name": "edizo-fullstack-app",
   "version": "1.1.1",
   "private": true,
-  "homepage": "https://EDIZO-IN.github.io/Main-Webpage", 
+  "homepage": "https://EDIZO-IN.github.io/Main-Webpage",
   "scripts": {
     "client": "npm start --prefix frontend",
     "server": "npm start --prefix server",
@@ -13,15 +13,23 @@
     "start": "npm run dev"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
     "browserslist": "^4.25.0",
     "concurrently": "^9.1.2",
     "gh-pages": "^6.3.0",
     "postcss": "^8.5.4",
-    "postcss-preset-env": "^7.11.0"
+    "postcss-preset-env": "^10.2.0"
   },
   "dependencies": {
     "framer-motion": "^12.15.0",
