@@ -185,7 +185,7 @@ const Home: React.FC = () => {
                 key={i}
                 variants={fadeInUp}
                 whileHover="hover"
-                variants={cardVariants}
+            
                 drag
                 dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
                 className="card p-6 rounded-xl hover:shadow-2xl transition-all duration-300 group"
