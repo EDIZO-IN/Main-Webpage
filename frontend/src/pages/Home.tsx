@@ -11,6 +11,8 @@ import {
   Code,
   Briefcase,
 } from 'lucide-react';
+
+// Custom Components
 import AnimatedSection from '../components/common/AnimatedSection';
 import Button from '../components/common/Button';
 
@@ -31,6 +33,7 @@ import backgroundimage from '../assets/background image/home.webp';
 const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
+  // Hide loader after 1.2s
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
@@ -62,7 +65,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {/* Loader Overlay */}
+      {/* Loader */}
       {loading && (
         <motion.div
           initial={{ opacity: 1 }}
