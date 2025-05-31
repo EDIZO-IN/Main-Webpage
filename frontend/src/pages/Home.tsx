@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,19 +8,17 @@ import {
   PenTool,
   Video,
   ImageIcon,
-   // Using Lightbulb for Web Development
+  Code,
   Briefcase,
-  Code, // Importing Code for a more specific icon if needed
 } from 'lucide-react';
-
 import AnimatedSection from '../components/common/AnimatedSection';
 import Button from '../components/common/Button';
 
-//service Images
+// Service Images
 import uiuxImg from '../assets/services/Uiux.png';
 import videoImg from '../assets/services/Video editing.png';
 import graphicImg from '../assets/services/Graphics Design.png';
-import webDevImg from '../assets/services/web development.png'; // Assuming you have this image
+import webDevImg from '../assets/services/web development.png';
 
 // Project Images
 import faceguard from '../assets/project/face-Guard.png';
@@ -31,15 +29,21 @@ import Epicnexus from '../assets/project/Epic-nexus.png';
 import backgroundimage from '../assets/background image/home.webp';
 
 const Home: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Animation Variants
   const fadeInUp = {
-    initial: { opacity: 0, y: 30 },
+    initial: { opacity: 0, y: 40 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   const staggerContainer = {
-    animate: { transition: { staggerChildren: 0.2 } },
+    animate: { transition: { staggerChildren: 0.25 } },
   };
 
   const cardVariants = {
@@ -47,13 +51,33 @@ const Home: React.FC = () => {
     animate: {
       opacity: 1,
       scale: 1,
-      transition: { type: 'spring', stiffness: 100, damping: 15, duration: 0.5 },
+      transition: { type: 'spring', stiffness: 120, damping: 15 },
     },
-    hover: { scale: 1.02, transition: { duration: 0.2 } },
+    hover: {
+      scale: 1.03,
+      boxShadow: '0px 12px 30px rgba(0,0,0,0.15)',
+      transition: { duration: 0.2 },
+    },
   };
 
   return (
     <>
+      {/* Loader Overlay */}
+      {loading && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-white z-50 flex items-center justify-center"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ loop: Infinity, duration: 2, ease: 'linear' }}
+            className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full"
+          />
+        </motion.div>
+      )}
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
@@ -69,9 +93,9 @@ const Home: React.FC = () => {
 
         {/* Content */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+          transition={{ delay: 0.4, duration: 1 }}
           className="container mx-auto px-4 relative z-10 text-white pt-24 md:pt-0"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -94,7 +118,7 @@ const Home: React.FC = () => {
           </div>
 
           <motion.div
-            animate={{ y: [0, 10, 0] }}
+            animate={{ y: [0, 12, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white hidden md:block"
           >
@@ -107,12 +131,17 @@ const Home: React.FC = () => {
       <section className="section bg-white py-20">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Premium Services</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                We offer specialized services tailored to help your brand stand out visually and digitally.
-              </p>
-            </div>
+            <motion.h2
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 120, damping: 10 }}
+              className="text-3xl md:text-4xl font-bold mb-4 text-center"
+            >
+              Our Premium Services
+            </motion.h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto text-center">
+              We offer specialized services tailored to help your brand stand out visually and digitally.
+            </p>
           </AnimatedSection>
 
           <motion.div
@@ -120,7 +149,7 @@ const Home: React.FC = () => {
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
           >
             {[
               {
@@ -145,10 +174,9 @@ const Home: React.FC = () => {
                 link: '/services/graphic-design',
               },
               {
-                // New Web Development Service
                 title: 'Web Development',
                 desc: 'Building responsive, scalable, and secure websites and web applications tailored to your business needs and objectives.',
-                icon: <Code />, // Using Code icon, could be Lightbulb or another relevant icon
+                icon: <Code />,
                 image: webDevImg,
                 link: '/services/web-development',
               },
@@ -156,17 +184,16 @@ const Home: React.FC = () => {
               <motion.div
                 key={i}
                 variants={fadeInUp}
-                whileHover={{
-                  y: -10,
-                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                  transition: { duration: 0.3 },
-                }}
-                className="card p-6 rounded-xl hover:shadow-xl transition-all duration-300 group"
+                whileHover="hover"
+                variants={cardVariants}
+                drag
+                dragConstraints={{ top: 0, left: 0, right: 0, bottom: 0 }}
+                className="card p-6 rounded-xl hover:shadow-2xl transition-all duration-300 group"
               >
                 <img
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-40 object-cover rounded-lg mb-4"
+                  className="w-full h-48 object-cover rounded-lg mb-4 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md"
                 />
                 <div className="bg-red-500 rounded-full w-14 h-14 flex items-center justify-center mb-4 text-white group-hover:scale-110 transition-transform duration-300 mx-auto">
                   {service.icon}
@@ -199,22 +226,25 @@ const Home: React.FC = () => {
       <section className="section bg-white py-20">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                A glimpse into some of our most impactful and innovative work, crafted to solve real-world challenges.
-              </p>
-            </div>
+            <motion.h2
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 120, damping: 10 }}
+              className="text-3xl md:text-4xl font-bold mb-4 text-center"
+            >
+              Featured Projects
+            </motion.h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto text-center">
+              A glimpse into some of our most impactful and innovative work, crafted to solve real-world challenges.
+            </p>
           </AnimatedSection>
 
           <motion.div
-            variants={{
-              animate: { transition: { staggerChildren: 0.2 } },
-            }}
+            variants={staggerContainer}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
           >
             {[
               {
@@ -239,7 +269,11 @@ const Home: React.FC = () => {
               <motion.div
                 key={i}
                 variants={fadeInUp}
-                whileHover={{ y: -10, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
+                whileHover={{
+                  y: -10,
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                  transition: { duration: 0.3 },
+                }}
                 className="rounded-xl overflow-hidden shadow-lg group transition-all duration-300 bg-white"
               >
                 <img
@@ -304,30 +338,22 @@ const Home: React.FC = () => {
             <AnimatedSection delay={0.3}>
               <motion.div
                 variants={cardVariants}
-                initial="initial"
-                animate="animate"
-                whileHover="hover"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: '0px 12px 30px rgba(0,0,0,0.2)',
+                }}
                 className="rounded-xl shadow-xl w-72 h-auto border border-gray-200 backdrop-blur-md bg-white/20 p-8 flex flex-col items-center justify-center text-center"
                 style={{ perspective: 600, transformStyle: 'preserve-3d' }}
               >
                 <motion.div
-                  style={{ transform: 'translateZ(20px)' }}
+                  whileHover={{ rotateY: 10, rotateX: -10 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 15 }}
                   className="mb-4"
                 >
-                  <Briefcase className="h-12 w-12 text-orange-500 animate-bounce" />
+                  <Briefcase className="h-12 w-12 text-orange-500" />
                 </motion.div>
-                <motion.h3
-                  style={{ transform: 'translateZ(10px)' }}
-                  className="font-bold text-xl text-orange-500 mb-2"
-                >
-                  Launch Your Career
-                </motion.h3>
-                <motion.p
-                  style={{ transform: 'translateZ(5px)' }}
-                  className="text-gray-700 text-sm"
-                >
-                  Explore internship roles.
-                </motion.p>
+                <h3 className="font-bold text-xl text-orange-500 mb-2">Launch Your Career</h3>
+                <p className="text-gray-700 text-sm">Explore internship roles.</p>
               </motion.div>
             </AnimatedSection>
           </div>
@@ -338,7 +364,12 @@ const Home: React.FC = () => {
       <section className="section bg-gradient-to-r from-red-700 to-orange-800 text-white py-20">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <div className="text-center max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-center max-w-3xl mx-auto"
+            >
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Business?</h2>
               <p className="text-xl mb-8">
                 Let's discuss how Edizo can help you achieve your business goals through innovative solutions and strategic guidance.
@@ -356,7 +387,7 @@ const Home: React.FC = () => {
                   Explore Services
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </AnimatedSection>
         </div>
       </section>
